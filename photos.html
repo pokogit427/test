@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Statement - 사진첩</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=Nanum+Myeongjo:wght@400;700;800&display=swap');
+        
+        body {
+            font-family: 'Pretendard', sans-serif;
+        }
+        .handwritten-font {
+            font-family: 'Nanum Myeongjo', serif;
+        }
+        
+        /* 3D sliding cards perspective */
+        .perspective-container {
+            perspective: 1200px;
+        }
+
+        /* Dark custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #38bdf8;
+        }
+    </style>
+</head>
+<body class="bg-slate-955 text-slate-100 antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-20 right-5 z-50 flex flex-col gap-2 pointer-events-none max-w-[90%] sm:max-w-sm"></div>
+
+    <!-- ========================================== -->
+    <!-- GLOBAL NAVIGATION HEADER -->
+    <!-- ========================================== -->
+    <header class="bg-slate-900 text-white sticky top-0 z-50 border-b border-slate-800 shadow-lg px-4 sm:px-6 py-3.5">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
+                <div class="flex items-center gap-2.5">
+                    <div class="p-2 bg-gradient-to-tr from-sky-400 to-indigo-500 rounded-xl text-white shadow-md">
+                        <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-base font-extrabold tracking-tight text-white flex items-center gap-1.5">
+                            <span>Personal Statement</span>
+                            <span class="text-[9px] font-mono text-sky-300 bg-sky-950/80 px-1.5 py-0.5 rounded border border-sky-900/60 font-bold uppercase tracking-wider">MPA</span>
+                        </h1>
+                        <p class="text-[10px] text-slate-400 font-medium">포트폴리오 · 사진첩 · O/X 퀴즈</p>
+                    </div>
+                </div>
+                <span class="text-[9px] font-mono text-slate-400 bg-slate-800 px-2 py-1 rounded md:hidden">v1.2.0</span>
+            </div>
+
+            <!-- Navigation Links (photos.html Active) -->
+            <nav class="flex items-center gap-1.5 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+                <a href="portfolio.html" class="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap text-slate-300 hover:text-white hover:bg-slate-800/60">
+                    <i data-lucide="user-check" class="w-4 h-4"></i>
+                    <span>포트폴리오</span>
+                </a>
+                <a href="photos.html" class="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap bg-sky-500 text-slate-950 shadow-md shadow-sky-500/10">
+                    <i data-lucide="camera" class="w-4 h-4"></i>
+                    <span>사진첩</span>
+                </a>
+                <a href="quiz.html" class="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap text-slate-300 hover:text-white hover:bg-slate-800/60">
+                    <i data-lucide="help-circle" class="w-4 h-4"></i>
+                    <span>O/X 퀴즈</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ========================================== -->
+    <!-- MAIN CONTENT: PHOTO VAULT SECTION -->
+    <!-- ========================================== -->
+    <div id="section-photos" class="flex-1 flex flex-col bg-slate-950 text-slate-100">
+        
+        <!-- Header Controls -->
+        <div class="bg-slate-900 border-b border-slate-800 px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+                <div class="p-2 bg-slate-955 text-white rounded-xl border border-slate-800">
+                    <i data-lucide="camera" class="w-5 h-5 text-sky-400"></i>
+                </div>
+                <div>
+                    <h2 class="text-sm sm:text-base font-bold text-white">photo album</h2>
+                    <p class="text-[10px] text-slate-400">순간을 담아 빛나도록</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <button id="toggle-photo-editor-btn" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl border border-slate-700 transition-all">
+                    <i data-lucide="sliders" class="w-3.5 h-3.5 text-sky-400"></i>
+                    <span id="photo-editor-btn-text">편집 패널 보이기</span>
+                </button>
+                <button id="export-photo-md-btn" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3.5 py-2 bg-sky-950 hover:bg-sky-900 text-sky-300 text-xs font-semibold rounded-xl border border-sky-900 transition-all">
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                    <span>포토에세이 저장</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Layout Area -->
+        <div class="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
+            
+            <!-- Side Editor Panel -->
+            <aside id="photo-editor-panel" class="hidden w-full lg:w-[380px] xl:w-[420px] bg-slate-900 border-b lg:border-b-0 lg:border-r border-slate-800 overflow-y-auto p-4 sm:p-6 flex-shrink-0 transition-all duration-300 max-h-[50vh] lg:max-h-none">
+                <div class="space-y-6">
+                    <div class="border-b border-slate-800 pb-3">
+                        <h3 class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+                            <i data-lucide="image" class="w-4 h-4 text-sky-400"></i>
+                            새로운 메모리 추가
+                        </h3>
+                    </div>
+
+                    <!-- Creation fields -->
+                    <div class="p-4 bg-slate-950 rounded-xl border border-slate-850 space-y-4">
+                        <div>
+                            <label class="block text-[9px] font-bold text-slate-400 mb-1">사진 파일 불러오기</label>
+                            <label class="flex flex-col items-center justify-center w-full h-20 border-2 border-dashed border-slate-800 hover:border-sky-500/50 rounded-xl cursor-pointer transition-colors bg-slate-900/50 group">
+                                <div class="flex flex-col items-center justify-center py-2">
+                                    <i data-lucide="upload-cloud" class="w-5 h-5 text-slate-500 group-hover:text-sky-400 mb-0.5"></i>
+                                    <p class="text-[9px] text-slate-400"><span class="font-bold text-sky-400">클릭하여</span> 이미지 업로드</p>
+                                </div>
+                                <input type="file" id="photo-file-uploader" class="hidden" accept="image/*" />
+                            </label>
+                        </div>
+                        <div class="text-center text-[9px] text-slate-600 font-mono">- OR DIRECT URL -</div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-slate-400 mb-1">이미지 웹 URL 주소</label>
+                            <input type="text" id="photo-add-imgurl" placeholder="https://images.unsplash.com/..." class="w-full px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-sky-500">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[9px] font-bold text-slate-400 mb-1">제목</label>
+                                <input type="text" id="photo-add-title" placeholder="봄날의 햇살" class="w-full px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-sky-500">
+                            </div>
+                            <div>
+                                <label class="block text-[9px] font-bold text-slate-400 mb-1">촬영 위치</label>
+                                <input type="text" id="photo-add-location" placeholder="강원도 양양" class="w-full px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-sky-500">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[9px] font-bold text-slate-400 mb-1">날짜</label>
+                                <input type="text" id="photo-add-date" placeholder="2026.04.12" class="w-full px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-sky-500 font-mono">
+                            </div>
+                            <div>
+                                <label class="block text-[9px] font-bold text-slate-400 mb-1">카테고리</label>
+                                <select id="photo-add-category" class="w-full px-2 py-1.5 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-sky-500">
+                                    <option value="일상">☕ 일상 (Daily)</option>
+                                    <option value="여행">✈️ 여행 (Travel)</option>
+                                    <option value="풍경">⛰️ 풍경 (Landscape)</option>
+                                    <option value="인물">👤 인물 (Portrait)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-slate-400 mb-1">한 줄 이야기 에세이</label>
+                            <textarea id="photo-add-desc" rows="2" placeholder="그날의 바람, 마음, 속삭임을 적어 기록으로 남기세요..." class="w-full px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-200 resize-none focus:outline-none focus:border-sky-500"></textarea>
+                        </div>
+                        <button onclick="addNewPhotoCard()" class="w-full py-2 bg-sky-500 hover:bg-sky-450 active:bg-sky-600 text-slate-950 text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-1.5 shadow-md">
+                            <i data-lucide="plus-circle" class="w-4 h-4"></i> 아카이브 슬롯 장착
+                        </button>
+                    </div>
+
+                    <div class="space-y-2 pt-4 border-t border-slate-800">
+                        <h4 class="text-xs font-semibold text-white">등록 카드 편집 목록</h4>
+                        <div id="photo-editor-list-container" class="space-y-2"></div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Viewer Deck Grid -->
+            <main class="flex-1 bg-slate-955 overflow-y-auto p-4 sm:p-6 md:p-8 flex justify-center items-start">
+                <div class="w-full max-w-5xl space-y-6">
+                    
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-slate-900/40 p-4 rounded-xl border border-slate-800">
+                        <div>
+                            <h3 class="text-xs font-bold text-slate-300 tracking-wide flex items-center gap-1.5 uppercase">
+                                <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
+                                Slots
+                            </h3>
+                            <p class="text-[10px] text-slate-400 mt-0.5">총 <span id="photo-count-badge" class="text-sky-400 font-bold">0</span>개의 찰나의 순간이 보관함 안에 들어있습니다.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-1 w-full sm:w-auto" id="photo-category-filter-bar"></div>
+                    </div>
+
+                    <!-- Envelopes Deck Grid -->
+                    <div id="photo-deck-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-y-28 md:gap-y-16 gap-x-8 pt-8 pb-24"></div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- GLOBAL FOOTER -->
+    <!-- ========================================== -->
+    <footer class="border-t border-slate-900 bg-slate-950 text-center py-4 text-xs text-slate-500 font-mono">
+        &copy; 2026 Jinu's Space. Crafting Custom Identity.
+    </footer>
+
+    <!-- ========================================== -->
+    <!-- PHOTOS JAVASCRIPT LOGIC -->
+    <!-- ========================================== -->
+    <script>
+        const initialPhotosData = [
+            
+        ];
+
+        let photosData = [];
+        let photoSelectedCategory = "ALL";
+        let photoActiveSlideId = null;
+        let photoUploadedBase64 = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initializeDatabase();
+            renderPhotoArchive();
+            setupPhotoVaultListeners();
+        });
+
+        function initializeDatabase() {
+            const savedPhotos = localStorage.getItem('tactile_photo_vault_db');
+            if (savedPhotos) {
+                photosData = JSON.parse(savedPhotos);
+            } else {
+                photosData = JSON.parse(JSON.stringify(initialPhotosData));
+                localStorage.setItem('tactile_photo_vault_db', JSON.stringify(photosData));
+            }
+        }
+
+        function setupPhotoVaultListeners() {
+            const inputUpload = document.getElementById("photo-file-uploader");
+            inputUpload.addEventListener("change", (e) => {
+                const targetFile = e.target.files[0];
+                if (targetFile) {
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        photoUploadedBase64 = evt.target.result;
+                        triggerToast("기기 내부 이미지가 버퍼 메모리에 등록되었습니다! 📸");
+                    };
+                    reader.readAsDataURL(targetFile);
+                }
+            });
+
+            const toggleEditBtn = document.getElementById("toggle-photo-editor-btn");
+            const sidePanel = document.getElementById("photo-editor-panel");
+            const btnText = document.getElementById("photo-editor-btn-text");
+
+            toggleEditBtn.addEventListener("click", () => {
+                const hiddenStatus = sidePanel.classList.contains("hidden");
+                if (hiddenStatus) {
+                    sidePanel.classList.remove("hidden");
+                    btnText.textContent = "편집 패널 숨기기";
+                } else {
+                    sidePanel.classList.add("hidden");
+                    btnText.textContent = "편집 패널 보이기";
+                }
+            });
+
+            document.getElementById("export-photo-md-btn").addEventListener("click", exportPhotoDiaryToMarkdown);
+        }
+
+        function renderPhotoArchive() {
+            const grid = document.getElementById("photo-deck-grid");
+            const editorList = document.getElementById("photo-editor-list-container");
+            const totalCount = document.getElementById("photo-count-badge");
+
+            grid.innerHTML = "";
+            editorList.innerHTML = "";
+
+            const filtered = photoSelectedCategory === "ALL" 
+                ? photosData 
+                : photosData.filter(p => p.category === photoSelectedCategory);
+
+            totalCount.textContent = filtered.length;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-16 flex flex-col items-center justify-center text-center text-slate-500 space-y-4">
+                        <div class="p-4 bg-slate-900 rounded-full border border-slate-800">
+                            <i data-lucide="image" class="w-8 h-8 text-slate-600"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold">보관함 슬롯이 비어 있습니다.</p>
+                            <p class="text-[10px] text-slate-600 mt-1">왼쪽 '편집 패널 보이기' 단추를 활용하여 나만의 첫 카드를 추가하세요.</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                filtered.forEach((ph, idx) => {
+                    const wrap = document.createElement("div");
+                    wrap.className = "perspective-container relative w-full h-[360px] flex items-end justify-center group mt-4";
+                    
+                    const isOpened = photoActiveSlideId === ph.id;
+
+                    wrap.innerHTML = `
+                        <div class="absolute bottom-0 w-full h-[220px] bg-slate-950 rounded-2xl shadow-inner z-0 border border-slate-800/60"></div>
+
+                        <div id="polaroid-${ph.id}" 
+                             onclick="togglePhotoSlideTrigger(${ph.id})"
+                             class="absolute w-[91%] max-w-full h-[300px] bg-white text-slate-900 rounded-xl shadow-lg p-3 flex flex-col justify-between transition-all duration-500 ease-out z-10 cursor-pointer ${
+                                 isOpened 
+                                 ? '-translate-y-[150px] scale-105 z-30 rotate-[2.5deg] shadow-2xl ring-4 ring-sky-400/40' 
+                                 : 'translate-y-4 group-hover:translate-y-[-12px] group-hover:rotate-[-1.5deg] rotate-0'
+                             }">
+                            
+                            <div class="w-full h-[62%] bg-slate-100 rounded-lg overflow-hidden relative shadow-inner">
+                                <img src="${ph.imgUrl}" alt="${ph.title}" class="w-full h-full object-cover select-none pointer-events-none" onerror="this.src='https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&q=80&w=800'">
+                                <span class="absolute top-2 right-2 px-1.5 py-0.5 bg-slate-950/80 text-white font-mono text-[8px] rounded backdrop-blur-sm border border-white/10 tracking-widest uppercase">${ph.category}</span>
+                            </div>
+
+                            <div class="h-[35%] flex flex-col justify-between pt-2">
+                                <div class="flex items-start justify-between gap-1">
+                                    <h4 class="font-bold text-xs text-slate-900 truncate leading-tight">${ph.title}</h4>
+                                    <span class="text-[8px] text-slate-400 font-mono flex-shrink-0">${ph.date}</span>
+                                </div>
+                                
+                                <div class="relative flex-1 ${isOpened ? 'block' : 'hidden'} overflow-y-auto mt-1 pr-1 border-t border-slate-100 pt-1">
+                                    <p class="handwritten-font text-[10px] text-slate-700 leading-relaxed font-semibold whitespace-pre-wrap">${ph.desc}</p>
+                                </div>
+
+                                <div class="flex items-center justify-between text-[8px] text-slate-450 mt-auto border-t border-slate-100/50 pt-1 ${isOpened ? 'hidden' : 'flex'}">
+                                    <span class="flex items-center gap-1">
+                                        <i data-lucide="map-pin" class="w-2.5 h-2.5 text-sky-500"></i> ${ph.location}
+                                    </span>
+                                    <span class="text-[7.5px] tracking-wider font-mono text-sky-600 font-extrabold uppercase">CLICK TO OPEN</span>
+                                </div>
+
+                                <div class="items-center justify-between text-[8px] text-slate-450 mt-auto border-t border-slate-100 pt-1 ${isOpened ? 'flex' : 'hidden'}">
+                                    <span class="flex items-center gap-1">
+                                        <i data-lucide="map-pin" class="w-2.5 h-2.5 text-sky-500"></i> ${ph.location}
+                                    </span>
+                                    <span class="text-[7.5px] font-mono text-rose-500 font-bold flex items-center gap-0.5">
+                                        <i data-lucide="chevron-down" class="w-2.5 h-2.5 animate-bounce"></i> CLOSE
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="absolute bottom-0 w-full h-[180px] bg-gradient-to-b from-slate-900 via-slate-950 to-black rounded-b-2xl rounded-t-md shadow-2xl z-20 border-t border-slate-800/80 flex flex-col justify-between p-4 cursor-pointer select-none overflow-hidden"
+                             onclick="togglePhotoSlideTrigger(${ph.id})">
+                            
+                            <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-7 bg-slate-950 rounded-b-full border-b border-slate-800/40 z-30"></div>
+                            
+                            <div class="space-y-1 relative z-10 pt-2">
+                                <span class="text-[8px] font-mono tracking-widest text-sky-400/80 font-bold">SLOT 0${idx + 1}</span>
+                                <h3 class="text-xs font-bold text-white tracking-tight truncate">${ph.title}</h3>
+                            </div>
+
+                            <div class="border-t border-dashed border-slate-800 pt-2 flex justify-between items-center text-slate-500 relative z-10">
+                                <span class="text-[8px] font-mono uppercase">${ph.category} ARCHIVE</span>
+                                <div class="flex items-center gap-1">
+                                    <i data-lucide="folder-closed" class="w-3.5 h-3.5 ${isOpened ? 'hidden' : 'block'}"></i>
+                                    <i data-lucide="folder-open" class="w-3.5 h-3.5 text-sky-400 ${isOpened ? 'block' : 'hidden'} animate-pulse"></i>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(wrap);
+                });
+            }
+
+            renderPhotoFilterBarUI();
+
+            photosData.forEach(ph => {
+                const subCard = document.createElement("div");
+                subCard.className = "flex items-center gap-3 bg-slate-950 p-2 rounded-xl border border-slate-850/80 hover:border-slate-800 transition-colors";
+                subCard.innerHTML = `
+                    <div class="w-10 h-10 rounded-lg bg-slate-900 overflow-hidden flex-shrink-0 border border-slate-800">
+                        <img src="${ph.imgUrl}" alt="" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&q=80&w=800'">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h5 class="text-[11px] font-bold text-white truncate">${ph.title}</h5>
+                        <p class="text-[9px] text-slate-400 truncate mt-0.5">${ph.location} | ${ph.date}</p>
+                    </div>
+                    <button onclick="removePhotoCard(${ph.id})" class="p-1.5 bg-slate-900 hover:bg-rose-950/40 text-slate-500 hover:text-rose-400 rounded-lg transition-colors border border-slate-800 flex-shrink-0">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                    </button>
+                `;
+                editorList.appendChild(subCard);
+            });
+
+            lucide.createIcons();
+        }
+
+        function renderPhotoFilterBarUI() {
+            const bar = document.getElementById("photo-category-filter-bar");
+            bar.innerHTML = "";
+
+            const categories = ["ALL", ...new Set(photosData.map(p => p.category))];
+
+            categories.forEach(cat => {
+                const btn = document.createElement("button");
+                btn.className = `px-2.5 py-1 text-[9px] sm:text-[10px] font-bold rounded-lg transition-all border ${
+                    photoSelectedCategory === cat 
+                    ? 'bg-sky-500 text-slate-950 border-sky-400 shadow-lg shadow-sky-500/10' 
+                    : 'bg-slate-955 hover:bg-slate-900 text-slate-400 border-slate-800'
+                }`;
+                btn.textContent = cat === "ALL" ? "모두 감상" : cat;
+                btn.onclick = () => {
+                    photoSelectedCategory = cat;
+                    photoActiveSlideId = null;
+                    renderPhotoArchive();
+                };
+                bar.appendChild(btn);
+            });
+        }
+
+        function togglePhotoSlideTrigger(id) {
+            if (photoActiveSlideId === id) {
+                photoActiveSlideId = null;
+            } else {
+                photoActiveSlideId = id;
+            }
+            renderPhotoArchive();
+        }
+
+        function addNewPhotoCard() {
+            const titleInput = document.getElementById("photo-add-title");
+            const locationInput = document.getElementById("photo-add-location");
+            const dateInput = document.getElementById("photo-add-date");
+            const catSelect = document.getElementById("photo-add-category");
+            const descInput = document.getElementById("photo-add-desc");
+            const directUrl = document.getElementById("photo-add-imgurl");
+
+            const title = titleInput.value.trim();
+            const location = locationInput.value.trim();
+            const date = dateInput.value.trim();
+            const category = catSelect.value;
+            const desc = descInput.value.trim();
+
+            let finalImage = "https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&q=80&w=800";
+
+            if (photoUploadedBase64) {
+                finalImage = photoUploadedBase64;
+            } else if (directUrl.value.trim() !== "") {
+                finalImage = directUrl.value.trim();
+            }
+
+            if (!title) {
+                triggerToast("에세이 카드 추가를 하려면 '제목' 정보가 있어야 합니다.", "error");
+                return;
+            }
+
+            const nextId = photosData.length > 0 ? Math.max(...photosData.map(p => p.id)) + 1 : 1;
+            photosData.push({
+                id: nextId,
+                title: title,
+                date: date || new Date().toISOString().split('T')[0].replace(/-/g, '.'),
+                location: location || "기억속 보금자리",
+                category: category,
+                desc: desc || "한 장의 소중한 순간 속에 차곡히 머금어 둔 아름다운 독백입니다.",
+                imgUrl: finalImage
+            });
+
+            localStorage.setItem('tactile_photo_vault_db', JSON.stringify(photosData));
+            
+            titleInput.value = "";
+            locationInput.value = "";
+            dateInput.value = "";
+            descInput.value = "";
+            directUrl.value = "";
+            photoUploadedBase64 = null;
+            document.getElementById("photo-file-uploader").value = "";
+
+            renderPhotoArchive();
+            triggerToast("📸 새로운 메모리 카드가 아카이브 슬롯에 이식되었습니다!");
+        }
+
+        function removePhotoCard(id) {
+            photosData = photosData.filter(p => p.id !== id);
+            if (photoActiveSlideId === id) photoActiveSlideId = null;
+            
+            localStorage.setItem('tactile_photo_vault_db', JSON.stringify(photosData));
+            renderPhotoArchive();
+            triggerToast("선택하신 사진 포켓 슬롯을 파기했습니다.", "error");
+        }
+
+        function exportPhotoDiaryToMarkdown() {
+            let output = `# 📸 Jinu's Space - 포토 에세이 아카이브 백업 데이터\n\n`;
+            output += `> **하늘빛 물감으로 가꾸어 낸 기억 저편의 실시간 아카이빙**\n>\n`;
+
+            photosData.forEach((ph, idx) => {
+                output += `## [포켓 Slot 0${idx + 1}] ${ph.title}\n\n`;
+                output += `* **촬영 날짜:** ${ph.date}\n`;
+                output += `* **기록 장소:** ${ph.location}\n`;
+                output += `* **카테고리:** ${ph.category}\n\n`;
+                output += `### 📝 일기 에세이 수록글\n`;
+                output += `> ${ph.desc}\n\n`;
+                output += `---\n\n`;
+            });
+
+            const blob = new Blob([output], { type: "text/markdown;charset=utf-8;" });
+            const downLink = document.createElement("a");
+            downLink.href = URL.createObjectURL(blob);
+            downLink.setAttribute("download", `jinu_photo_essay_backup.md`);
+            document.body.appendChild(downLink);
+            downLink.click();
+            document.body.removeChild(downLink);
+            
+            triggerToast("포토 에세이가 마크다운(.md) 파일 형태로 추출되었습니다! 💾");
+        }
+
+        // Toast Helper
+        function triggerToast(msg, type = "success") {
+            const container = document.getElementById("toast-container");
+            const toast = document.createElement("div");
+            toast.className = `flex items-center gap-2.5 px-3.5 py-3 rounded-xl shadow-2xl border text-xs font-semibold transition-all transform translate-y-2 opacity-0 pointer-events-auto max-w-sm ${
+                type === 'error' 
+                ? 'bg-rose-950 text-rose-200 border-rose-900/60' 
+                : 'bg-slate-900 text-sky-450 border-slate-800'
+            }`;
+            
+            const symbol = type === 'error' ? 'alert-circle' : 'check-circle';
+            toast.innerHTML = `
+                <i data-lucide="${symbol}" class="w-4 h-4 flex-shrink-0 ${type === 'error' ? 'text-rose-400' : 'text-sky-400'}"></i>
+                <span class="flex-1">${msg}</span>
+            `;
+            
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.classList.remove("translate-y-2", "opacity-0");
+            }, 50);
+
+            setTimeout(() => {
+                toast.classList.add("translate-y-2", "opacity-0");
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3500);
+        }
+    </script>
+</body>
+</html>

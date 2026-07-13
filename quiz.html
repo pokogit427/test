@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Statement - O/X 퀴즈 스테이션</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Pretendard', sans-serif;
+        }
+        
+        /* Smooth transitions for quiz cards */
+        .quiz-card {
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #38bdf8;
+        }
+    </style>
+</head>
+<body class="bg-slate-955 text-slate-100 antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-20 right-5 z-50 flex flex-col gap-2 pointer-events-none max-w-[90%] sm:max-w-sm"></div>
+
+    <!-- ========================================== -->
+    <!-- GLOBAL NAVIGATION HEADER -->
+    <!-- ========================================== -->
+    <header class="bg-slate-900 text-white sticky top-0 z-50 border-b border-slate-800 shadow-lg px-4 sm:px-6 py-3.5">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
+                <div class="flex items-center gap-2.5">
+                    <div class="p-2 bg-gradient-to-tr from-sky-400 to-indigo-500 rounded-xl text-white shadow-md">
+                        <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-base font-extrabold tracking-tight text-white flex items-center gap-1.5">
+                            <span>Personal Statement</span>
+                            <span class="text-[9px] font-mono text-sky-300 bg-sky-950/80 px-1.5 py-0.5 rounded border border-sky-900/60 font-bold uppercase tracking-wider">MPA</span>
+                        </h1>
+                        <p class="text-[10px] text-slate-400 font-medium">포트폴리오 · 사진첩 · O/X 퀴즈</p>
+                    </div>
+                </div>
+                <span class="text-[9px] font-mono text-slate-400 bg-slate-800 px-2 py-1 rounded md:hidden">v1.2.0</span>
+            </div>
+
+            <!-- Navigation Links (quiz.html Active) -->
+            <nav class="flex items-center gap-1.5 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+                <a href="portfolio.html" class="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap text-slate-300 hover:text-white hover:bg-slate-800/60">
+                    <i data-lucide="user-check" class="w-4 h-4"></i>
+                    <span>포트폴리오</span>
+                </a>
+                <a href="photos.html" class="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap text-slate-300 hover:text-white hover:bg-slate-800/60">
+                    <i data-lucide="camera" class="w-4 h-4"></i>
+                    <span>사진첩</span>
+                </a>
+                <a href="quiz.html" class="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap bg-sky-500 text-slate-950 shadow-md shadow-sky-500/10">
+                    <i data-lucide="help-circle" class="w-4 h-4"></i>
+                    <span>O/X 퀴즈 스테이션</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ========================================== -->
+    <!-- MAIN CONTENT: O/X QUIZ STATION SECTION -->
+    <!-- ========================================== -->
+    <div id="section-quiz" class="flex-1 flex flex-col bg-slate-950 text-slate-100">
+        
+        <!-- Headers -->
+        <div class="bg-slate-900 border-b border-slate-800 px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+                <div class="p-2 bg-slate-955 text-white rounded-xl border border-slate-800">
+                    <i data-lucide="help-circle" class="w-5 h-5 text-sky-400"></i>
+                </div>
+                <div>
+                    <h2 class="text-sm sm:text-base font-bold text-white">O/X Quiz Station</h2>
+                    <p class="text-[10px] text-slate-400">나 자신을 퀴즈로!</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <!-- Toggle Quiz Editor Button (문제 수정) -->
+                <button id="toggle-quiz-editor-btn" class="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition-colors">
+                    <i data-lucide="sliders" class="w-3.5 h-3.5 text-sky-400"></i>
+                    <span id="quiz-editor-btn-text">문제 수정</span>
+                </button>
+                <button onclick="injectSampleQuizData()" class="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-lg border border-slate-700 transition-colors">
+                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-sky-400"></i>
+                    <span>샘플 퀴즈 보완</span>
+                </button>
+                <button id="export-quiz-md-btn" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3.5 py-2 bg-sky-950 hover:bg-sky-900 text-sky-300 text-xs font-semibold rounded-lg border border-sky-900 transition-all">
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                    <span>퀴즈 세트 공유하기</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Workspace Layout -->
+        <div class="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
+            
+            <!-- Left Panel (Initially Hidden with 'hidden' class) -->
+            <aside id="quiz-editor-panel" class="hidden w-full lg:w-[380px] xl:w-[420px] bg-slate-900 border-b lg:border-b-0 lg:border-r border-slate-800 overflow-y-auto p-4 sm:p-6 flex-shrink-0 transition-all duration-300 max-h-[40vh] lg:max-h-none">
+                <div class="space-y-6">
+                    <div class="border-b border-slate-800 pb-3">
+                        <h3 class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+                            <i data-lucide="edit-3" class="w-4 h-4 text-sky-400"></i>
+                            새로운 퀴즈 출제
+                        </h3>
+                    </div>
+
+                    <div class="bg-slate-955 p-4 rounded-xl border border-slate-850 space-y-4">
+                        <div>
+                            <label class="block text-[9px] font-bold text-slate-400 mb-1">출제할 퀴즈 문항 내용</label>
+                            <textarea id="quiz-add-question" rows="3" placeholder="참/거짓을 명확하게 식별할 수 있는 수준의 질문을 적으세요..." class="w-full px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-200 resize-none focus:outline-none focus:border-sky-500"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-slate-400 mb-1.5">정답 키 지정</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button id="quiz-btn-o" onclick="selectQuizFormAnswer('O')" class="py-2 bg-slate-900 hover:bg-slate-850 text-slate-400 rounded-lg text-xs font-bold border border-slate-800 transition-all">O (맞습니다)</button>
+                                <button id="quiz-btn-x" onclick="selectQuizFormAnswer('X')" class="py-2 bg-slate-900 hover:bg-slate-850 text-slate-400 rounded-lg text-xs font-bold border border-slate-800 transition-all">X (틀렸습니다)</button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-slate-400 mb-1">상세 해설 정보</label>
+                            <textarea id="quiz-add-explanation" rows="2" placeholder="정답 판정 이후 수험자가 읽고 납득할 수 있는 설명을 기술하세요..." class="w-full px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-200 resize-none focus:outline-none focus:border-sky-500"></textarea>
+                        </div>
+                        <button onclick="registerNewQuizItem()" class="w-full py-2 bg-sky-500 hover:bg-sky-450 active:bg-sky-600 text-slate-950 text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-1 shadow-md">
+                            <i data-lucide="check-square" class="w-4 h-4"></i> 문제 출제 등록
+                        </button>
+                    </div>
+
+                    <div class="space-y-3 pt-4 border-t border-slate-800">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-xs font-semibold text-white">등록 퀴즈 리스트 (<span id="quiz-current-count">0</span>/10)</h4>
+                            <button onclick="clearAllQuizList()" class="text-[9px] text-rose-400 hover:text-rose-300 font-bold transition-colors">전체 삭제</button>
+                        </div>
+                        <div id="quiz-editor-list-container" class="space-y-2"></div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Right Side Playing Deck -->
+            <main class="flex-1 bg-slate-955 p-4 sm:p-6 md:p-8 flex justify-center items-center transition-all duration-300 overflow-y-auto">
+                <div class="w-full max-w-xl space-y-6 flex flex-col justify-between min-h-[420px]">
+                    
+                    <!-- Progress Card -->
+                    <div class="bg-slate-900/40 p-3 sm:p-4 rounded-xl border border-slate-800 flex justify-between items-center text-xs">
+                        <span class="font-bold text-slate-400 flex items-center gap-1.5 uppercase tracking-wider">
+                            <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
+                            현재 진행도
+                        </span>
+                        <span id="quiz-game-progress-badge" class="font-mono text-sky-400 font-extrabold text-sm">0 / 0</span>
+                    </div>
+
+                    <div id="quiz-game-card-viewport" class="flex-1 flex justify-center items-center py-4"></div>
+
+                    <div id="quiz-game-controllers" class="grid grid-cols-2 gap-4">
+                        <button onclick="answerQuizQuestion('O')" class="h-24 sm:h-28 bg-slate-900 hover:bg-sky-950/20 text-sky-400 rounded-2xl border-2 border-slate-850 hover:border-sky-500/30 transition-all flex flex-col items-center justify-center gap-1 group">
+                            <span class="text-3xl sm:text-4xl font-extrabold font-serif group-hover:scale-110 transition-transform">O</span>
+                            <span class="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wide">True (맞다)</span>
+                        </button>
+                        <button onclick="answerQuizQuestion('X')" class="h-24 sm:h-28 bg-slate-900 hover:bg-rose-950/20 text-rose-400 rounded-2xl border-2 border-slate-850 hover:border-rose-500/30 transition-all flex flex-col items-center justify-center gap-1 group">
+                            <span class="text-3xl sm:text-4xl font-extrabold font-serif group-hover:scale-110 transition-transform">X</span>
+                            <span class="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wide">False (틀리다)</span>
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- GLOBAL FOOTER -->
+    <!-- ========================================== -->
+    <footer class="border-t border-slate-900 bg-slate-950 text-center py-4 text-xs text-slate-500 font-mono">
+        &copy; 2026 Jinu's Space. Crafting Custom Identity.
+    </footer>
+
+    <!-- ========================================== -->
+    <!-- QUIZ JAVASCRIPT LOGIC -->
+    <!-- ========================================== -->
+    <script>
+        const initialQuizData = [
+            
+        ];
+
+        let quizList = [];
+        let quizSelectedFormAnswer = null;
+        let quizCurrentPlayIndex = 0;
+        let quizScoreCount = 0;
+        let quizPlayHistory = [];
+
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtxObj = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initializeDatabase();
+            setupQuizResetListener();
+            setupQuizEditorToggle();
+        });
+
+        function initializeDatabase() {
+            const savedQuizzes = localStorage.getItem('ssafy_quiz_bank_save_p5');
+            if (savedQuizzes) {
+                quizList = JSON.parse(savedQuizzes);
+            } else {
+                quizList = JSON.parse(JSON.stringify(initialQuizData));
+                localStorage.setItem('ssafy_quiz_bank_save_p5', JSON.stringify(quizList));
+            }
+            syncQuizStateToUI();
+        }
+
+        function setupQuizResetListener() {
+            document.getElementById("export-quiz-md-btn").addEventListener("click", exportQuizSheetToMarkdown);
+        }
+
+        function setupQuizEditorToggle() {
+            const toggleEditBtn = document.getElementById("toggle-quiz-editor-btn");
+            const sidePanel = document.getElementById("quiz-editor-panel");
+            const btnText = document.getElementById("quiz-editor-btn-text");
+
+            toggleEditBtn.addEventListener("click", () => {
+                triggerSynthSFX("click");
+                const isHidden = sidePanel.classList.contains("hidden");
+                if (isHidden) {
+                    sidePanel.classList.remove("hidden");
+                    btnText.textContent = "편집 닫기";
+                    triggerToast("문제 편집 패널이 활성화되었습니다.");
+                } else {
+                    sidePanel.classList.add("hidden");
+                    btnText.textContent = "문제 수정";
+                    triggerToast("편집 패널을 숨겼습니다.");
+                }
+            });
+        }
+
+        function triggerSynthSFX(soundType) {
+            try {
+                if (!audioCtxObj) audioCtxObj = new AudioCtx();
+                const osc = audioCtxObj.createOscillator();
+                const gain = audioCtxObj.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtxObj.destination);
+
+                if (soundType === "correct") {
+                    osc.type = "sine";
+                    osc.frequency.setValueAtTime(523.25, audioCtxObj.currentTime); // C5
+                    osc.frequency.setValueAtTime(659.25, audioCtxObj.currentTime + 0.1); // E5
+                    osc.frequency.setValueAtTime(783.99, audioCtxObj.currentTime + 0.2); // G5
+                    gain.gain.setValueAtTime(0.12, audioCtxObj.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtxObj.currentTime + 0.45);
+                    osc.start();
+                    osc.stop(audioCtxObj.currentTime + 0.5);
+                } else if (soundType === "wrong") {
+                    osc.type = "sawtooth";
+                    osc.frequency.setValueAtTime(130, audioCtxObj.currentTime);
+                    osc.frequency.linearRampToValueAtTime(75, audioCtxObj.currentTime + 0.25);
+                    gain.gain.setValueAtTime(0.1, audioCtxObj.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtxObj.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(audioCtxObj.currentTime + 0.35);
+                } else if (soundType === "click") {
+                    osc.type = "triangle";
+                    osc.frequency.setValueAtTime(380, audioCtxObj.currentTime);
+                    gain.gain.setValueAtTime(0.08, audioCtxObj.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtxObj.currentTime + 0.05);
+                    osc.start();
+                    osc.stop(audioCtxObj.currentTime + 0.06);
+                }
+            } catch (err) {
+                // Audio blocker guard
+            }
+        }
+
+        function injectSampleQuizData() {
+            quizList = JSON.parse(JSON.stringify(initialQuizData));
+            localStorage.setItem('ssafy_quiz_bank_save_p5', JSON.stringify(quizList));
+            syncQuizStateToUI();
+            triggerToast("개발 상식 샘플 퀴즈들이 등록되었습니다!");
+        }
+
+        function selectQuizFormAnswer(ans) {
+            triggerSynthSFX("click");
+            quizSelectedFormAnswer = ans;
+            const bO = document.getElementById("quiz-btn-o");
+            const bX = document.getElementById("quiz-btn-x");
+
+            if (ans === 'O') {
+                bO.className = "py-2 bg-sky-500 text-slate-950 rounded-lg text-xs font-bold border border-sky-400 transition-all";
+                bX.className = "py-2 bg-slate-900 border border-slate-800 text-slate-400 rounded-lg text-xs font-bold transition-all";
+            } else {
+                bX.className = "py-2 bg-rose-500 text-slate-950 rounded-lg text-xs font-bold border border-rose-400 transition-all";
+                bO.className = "py-2 bg-slate-900 border border-slate-800 text-slate-400 rounded-lg text-xs font-bold transition-all";
+            }
+        }
+
+        function registerNewQuizItem() {
+            const qInput = document.getElementById("quiz-add-question");
+            const expInput = document.getElementById("quiz-add-explanation");
+
+            const qText = qInput.value.trim();
+            const expText = expInput.value.trim();
+
+            if (!qText) {
+                triggerToast("문제를 먼저 기재하셔야 합니다.", "error");
+                return;
+            }
+            if (!quizSelectedFormAnswer) {
+                triggerToast("정답(O / X)을 선택해 지정하세요.", "error");
+                return;
+            }
+            if (quizList.length >= 10) {
+                triggerToast("퀴즈는 최대 10문제까지만 등록 가능합니다.", "error");
+                return;
+            }
+
+            const nextId = quizList.length > 0 ? Math.max(...quizList.map(ql => ql.id)) + 1 : 1;
+            quizList.push({
+                id: nextId,
+                question: qText,
+                answer: quizSelectedFormAnswer,
+                explanation: expText || "상세한 풀이가 등록되지 않은 상태입니다."
+            });
+
+            localStorage.setItem('ssafy_quiz_bank_save_p5', JSON.stringify(quizList));
+            syncQuizStateToUI();
+
+            qInput.value = "";
+            expInput.value = "";
+            quizSelectedFormAnswer = null;
+            document.getElementById("quiz-btn-o").className = "py-2 bg-slate-900 hover:bg-slate-850 text-slate-400 rounded-lg text-xs font-bold border border-slate-800 transition-all";
+            document.getElementById("quiz-btn-x").className = "py-2 bg-slate-900 hover:bg-slate-850 text-slate-400 rounded-lg text-xs font-bold border border-slate-800 transition-all";
+
+            triggerToast("새로운 O/X 평가 카드가 저장되었습니다.");
+        }
+
+        function removeQuizItem(id) {
+            quizList = quizList.filter(ql => ql.id !== id);
+            localStorage.setItem('ssafy_quiz_bank_save_p5', JSON.stringify(quizList));
+            syncQuizStateToUI();
+            triggerToast("선택하신 문제를 시험지에서 배제했습니다.", "error");
+        }
+
+        function clearAllQuizList() {
+            if (confirm("시험지를 백지화하고 등록된 모든 퀴즈 카드를 제거하시겠습니까?")) {
+                quizList = [];
+                localStorage.setItem('ssafy_quiz_bank_save_p5', JSON.stringify(quizList));
+                syncQuizStateToUI();
+                triggerToast("모든 퀴즈가 폐기되었습니다.");
+            }
+        }
+
+        function resetQuizGameRound() {
+            quizCurrentPlayIndex = 0;
+            quizScoreCount = 0;
+            quizPlayHistory = [];
+            renderQuizGameplayFrame();
+        }
+
+        function syncQuizStateToUI() {
+            document.getElementById("quiz-current-count").textContent = quizList.length;
+
+            const listWrapper = document.getElementById("quiz-editor-list-container");
+            listWrapper.innerHTML = "";
+
+            quizList.forEach((ql, idx) => {
+                const card = document.createElement("div");
+                card.className = "flex items-center justify-between bg-slate-955 p-2.5 rounded-xl border border-slate-850 hover:border-slate-800 transition-colors gap-4";
+                card.innerHTML = `
+                    <div class="min-w-0 flex-1">
+                        <h5 class="text-[11px] font-bold text-white truncate"><span class="text-sky-400 mr-1">Q0${idx + 1}</span> ${ql.question}</h5>
+                        <p class="text-[9px] text-slate-400 mt-0.5 truncate">정답 : <span class="text-sky-400 font-extrabold">${ql.answer}</span> | ${ql.explanation}</p>
+                    </div>
+                    <button onclick="removeQuizItem(${ql.id})" class="p-1.5 bg-slate-900 hover:bg-rose-955/45 text-slate-500 hover:text-rose-400 rounded-lg border border-slate-800 flex-shrink-0 transition-colors">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                    </button>
+                `;
+                listWrapper.appendChild(card);
+            });
+
+            lucide.createIcons();
+            resetQuizGameRound();
+        }
+
+        function renderQuizGameplayFrame() {
+            const viewport = document.getElementById("quiz-game-card-viewport");
+            const badge = document.getElementById("quiz-game-progress-badge");
+            const controls = document.getElementById("quiz-game-controllers");
+
+            if (quizList.length === 0) {
+                badge.textContent = "0 / 0";
+                controls.style.display = "none";
+                viewport.innerHTML = `
+                    <div class="py-12 text-center space-y-4 flex flex-col items-center">
+                        <div class="p-4 bg-slate-900/60 rounded-full border border-slate-800">
+                            <i data-lucide="help-circle" class="w-8 h-8 text-slate-600"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <p class="text-xs font-semibold text-slate-300">시험지 원고가 비어있습니다.</p>
+                            <p class="text-[10px] text-slate-500 max-w-[240px] leading-relaxed mx-auto">상단의 '샘플 퀴즈 보완' 단추를 활용하거나 왼쪽 편집기를 통해 나만의 첫 퀴즈를 직접 출제해 보세요.</p>
+                        </div>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            controls.style.display = "grid";
+            const finished = quizCurrentPlayIndex >= quizList.length;
+
+            if (finished) {
+                badge.textContent = "FINISH";
+                controls.style.display = "none";
+
+                let historyHtml = "";
+                quizPlayHistory.forEach((hist, idx) => {
+                    historyHtml += `
+                        <div class="p-3 bg-slate-950 rounded-lg border ${hist.isCorrect ? 'border-slate-800' : 'border-rose-950/40'} text-left text-[11px] space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold flex items-center gap-1 text-slate-200">
+                                    <span class="text-sky-400 font-mono">Q0${idx + 1}</span>
+                                    <span class="truncate max-w-[150px] sm:max-w-xs">${hist.question}</span>
+                                </span>
+                                <span class="${hist.isCorrect ? 'text-sky-400' : 'text-rose-400'} font-bold">${hist.isCorrect ? '득점' : '오답'}</span>
+                            </div>
+                            <p class="text-[9px] text-slate-450 border-t border-slate-900 pt-1 leading-relaxed">해해설 : ${hist.explanation}</p>
+                        </div>
+                    `;
+                });
+
+                viewport.innerHTML = `
+                    <div class="w-full bg-slate-900 rounded-2xl border border-slate-800 p-6 space-y-5 text-center quiz-card max-h-[380px] overflow-y-auto">
+                        <div class="space-y-1">
+                            <span class="text-[9px] tracking-widest text-sky-400 font-mono font-bold uppercase">Game Clear</span>
+                            <h3 class="text-xl font-bold text-white">모든 테스트를 완료했습니다!</h3>
+                        </div>
+                        
+                        <div class="flex items-center justify-center">
+                            <div class="w-20 h-20 rounded-full border-4 border-sky-400 flex flex-col items-center justify-center bg-slate-950 shadow-inner">
+                                <span class="text-2xl font-black text-sky-400">${quizScoreCount} / ${quizList.length}</span>
+                                <span class="text-[8px] text-slate-500 font-extrabold uppercase">SCORE</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <h4 class="text-xs font-semibold text-slate-300 text-left">종합 오답 해설 노트</h4>
+                            <div class="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+                                ${historyHtml}
+                            </div>
+                        </div>
+
+                        <button onclick="resetQuizGameRound()" class="w-full py-2 bg-sky-500 hover:bg-sky-450 active:bg-sky-600 text-slate-950 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1">
+                            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> 다시 도전하기
+                        </button>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            badge.textContent = `${quizCurrentPlayIndex + 1} / ${quizList.length}`;
+            const activeQuiz = quizList[quizCurrentPlayIndex];
+
+            viewport.innerHTML = `
+                <div class="w-full bg-slate-900 border border-slate-850 p-6 rounded-2xl flex flex-col justify-between min-h-[200px] quiz-card shadow-xl relative overflow-hidden">
+                    <span class="text-[8px] font-mono font-bold tracking-widest text-sky-400">QUESTION 0${quizCurrentPlayIndex + 1}</span>
+                    <p class="text-sm sm:text-base font-bold text-white leading-relaxed tracking-tight py-4 whitespace-pre-wrap">${activeQuiz.question}</p>
+                    <div class="flex items-center gap-1.5 text-[9px] text-slate-500 mt-auto border-t border-slate-800/40 pt-3">
+                        <i data-lucide="info" class="w-3.5 h-3.5 text-sky-500"></i> 하단 참/거짓 판별 스탠드를 조작해 답하세요.
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        function answerQuizQuestion(userAnswer) {
+            if (quizCurrentPlayIndex >= quizList.length) return;
+
+            const currentItem = quizList[quizCurrentPlayIndex];
+            const correctFlag = currentItem.answer === userAnswer;
+
+            if (correctFlag) {
+                triggerSynthSFX("correct");
+                quizScoreCount++;
+                triggerToast("🎉 정답입니다!");
+            } else {
+                triggerSynthSFX("wrong");
+                triggerToast("🚨 아쉽지만 기회가 날아갔습니다.", "error");
+            }
+
+            quizPlayHistory.push({
+                index: quizCurrentPlayIndex,
+                question: currentItem.question,
+                userAnswer: userAnswer,
+                isCorrect: correctFlag,
+                explanation: currentItem.explanation
+            });
+
+            const targetCard = document.querySelector(".quiz-card");
+            if (targetCard) {
+                targetCard.style.transform = "translateX(120px) rotate(6deg)";
+                targetCard.style.opacity = "0";
+            }
+
+            setTimeout(() => {
+                quizCurrentPlayIndex++;
+                renderQuizGameplayFrame();
+            }, 300);
+        }
+
+        function exportQuizSheetToMarkdown() {
+            if (quizList.length === 0) {
+                triggerToast("출제된 문항이 없어 원고 작성을 할 수 없습니다.", "error");
+                return;
+            }
+
+            let output = `# 📝 Jinu's Space - O/X 퀴즈 스테이션 출제 시험지 원고\n\n`;
+
+            quizList.forEach((ql, idx) => {
+                output += `## [출제 문항 0${idx + 1}] ${ql.question}\n\n`;
+                output += `* **정답:** ${ql.answer}\n`;
+                output += `### 💡 해설\n`;
+                output += `> ${ql.explanation}\n\n`;
+                output += `---\n\n`;
+            });
+
+            const blob = new Blob([output], { type: "text/markdown;charset=utf-8;" });
+            const downLink = document.createElement("a");
+            downLink.href = URL.createObjectURL(blob);
+            downLink.setAttribute("download", `custom_quiz_sheet_backup.md`);
+            document.body.appendChild(downLink);
+            downLink.click();
+            document.body.removeChild(downLink);
+            
+            triggerToast("퀴즈 시험지가 마크다운 파일로 다운로드되었습니다! 💾");
+        }
+
+        // Toast Helper
+        function triggerToast(msg, type = "success") {
+            const container = document.getElementById("toast-container");
+            const toast = document.createElement("div");
+            toast.className = `flex items-center gap-2.5 px-3.5 py-3 rounded-xl shadow-2xl border text-xs font-semibold transition-all transform translate-y-2 opacity-0 pointer-events-auto max-w-sm ${
+                type === 'error' 
+                ? 'bg-rose-955 text-rose-200 border-rose-900/60' 
+                : 'bg-slate-900 text-sky-450 border-slate-850'
+            }`;
+            
+            const symbol = type === 'error' ? 'alert-circle' : 'check-circle';
+            toast.innerHTML = `
+                <i data-lucide="${symbol}" class="w-4 h-4 flex-shrink-0 ${type === 'error' ? 'text-rose-400' : 'text-sky-400'}"></i>
+                <span class="flex-1">${msg}</span>
+            `;
+            
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.classList.remove("translate-y-2", "opacity-0");
+            }, 50);
+
+            setTimeout(() => {
+                toast.classList.add("translate-y-2", "opacity-0");
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
