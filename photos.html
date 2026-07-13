@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Statement - 사진첩</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=Nanum+Myeongjo:wght@400;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght=300;400;500;600;700;800&family=Nanum+Myeongjo:wght=400;700;800&display=swap');
         
         body {
             font-family: 'Pretendard', sans-serif;
@@ -40,10 +42,15 @@
 </head>
 <body class="bg-slate-955 text-slate-100 antialiased min-h-screen flex flex-col justify-between">
 
+    <!-- Toast Notification Container -->
     <div id="toast-container" class="fixed top-20 right-5 z-50 flex flex-col gap-2 pointer-events-none max-w-[90%] sm:max-w-sm"></div>
 
+    <!-- ========================================== -->
+    <!-- GLOBAL NAVIGATION HEADER -->
+    <!-- ========================================== -->
     <header class="bg-slate-900 text-white sticky top-0 z-50 border-b border-slate-800 shadow-lg px-4 sm:px-6 py-3.5">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <!-- Brand Logo -->
             <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
                 <div class="flex items-center gap-2.5">
                     <div class="p-2 bg-gradient-to-tr from-sky-400 to-indigo-500 rounded-xl text-white shadow-md">
@@ -60,6 +67,7 @@
                 <span class="text-[9px] font-mono text-slate-400 bg-slate-800 px-2 py-1 rounded md:hidden">v1.2.0</span>
             </div>
 
+            <!-- Navigation Links (photos.html Active) -->
             <nav class="flex items-center gap-1.5 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 scrollbar-none">
                 <a href="portfolio.html" class="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap text-slate-300 hover:text-white hover:bg-slate-800/60">
                     <i data-lucide="user-check" class="w-4 h-4"></i>
@@ -77,8 +85,12 @@
         </div>
     </header>
 
-    <div id="section-photos" class="flex-1 flex flex-col bg-slate-955 text-slate-100">
+    <!-- ========================================== -->
+    <!-- MAIN CONTENT: PHOTO VAULT SECTION -->
+    <!-- ========================================== -->
+    <div id="section-photos" class="flex-1 flex flex-col bg-slate-950 text-slate-100">
         
+        <!-- Header Controls -->
         <div class="bg-slate-900 border-b border-slate-800 px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-3 w-full sm:w-auto">
                 <div class="p-2 bg-slate-955 text-white rounded-xl border border-slate-800">
@@ -101,8 +113,10 @@
             </div>
         </div>
 
+        <!-- Layout Area -->
         <div class="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
             
+            <!-- Side Editor Panel -->
             <aside id="photo-editor-panel" class="hidden w-full lg:w-[380px] xl:w-[420px] bg-slate-900 border-b lg:border-b-0 lg:border-r border-slate-800 overflow-y-auto p-4 sm:p-6 flex-shrink-0 transition-all duration-300 max-h-[50vh] lg:max-h-none">
                 <div class="space-y-6">
                     <div class="border-b border-slate-800 pb-3">
@@ -112,21 +126,23 @@
                         </h3>
                     </div>
 
+                    <!-- Creation fields -->
                     <div class="p-4 bg-slate-955 rounded-xl border border-slate-850 space-y-4">
                         <div>
-                            <label class="block text-[9px] font-bold text-slate-400 mb-1">사진 파일 불러오기 (다중 선택 가능)</label>
+                            <label class="block text-[9px] font-bold text-slate-400 mb-1">사진 파일들 불러오기 (다중 선택 가능)</label>
                             <label class="flex flex-col items-center justify-center w-full h-20 border-2 border-dashed border-slate-800 hover:border-sky-500/50 rounded-xl cursor-pointer transition-colors bg-slate-900/50 group">
-                                <div class="flex flex-col items-center justify-center py-2">
+                                <div class="flex flex-col items-center justify-center py-2 text-center px-2">
                                     <i data-lucide="upload-cloud" class="w-5 h-5 text-slate-500 group-hover:text-sky-400 mb-0.5"></i>
-                                    <p class="text-[9px] text-slate-400"><span class="font-bold text-sky-400">클릭하여</span> 이미지 업로드</p>
+                                    <p class="text-[9px] text-slate-400"><span class="font-bold text-sky-400">클릭하여</span> 이미지 여러 장 업로드</p>
+                                    <span id="file-count-indicator" class="text-[8px] text-sky-400 mt-1 font-mono">선택된 파일 없음</span>
                                 </div>
                                 <input type="file" id="photo-file-uploader" class="hidden" accept="image/*" multiple />
                             </label>
                         </div>
-                        <div class="text-center text-[9px] text-slate-600 font-mono">- OR DIRECT URL -</div>
+                        <div class="text-center text-[9px] text-slate-600 font-mono">- OR DIRECT URLS (쉼표나 줄바꿈으로 구분) -</div>
                         <div>
-                            <label class="block text-[9px] font-bold text-slate-400 mb-1">이미지 웹 URL 주소</label>
-                            <input type="text" id="photo-add-imgurl" placeholder="https://images.unsplash.com/..." class="w-full px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-sky-500">
+                            <label class="block text-[9px] font-bold text-slate-400 mb-1">이미지 웹 URL 주소들</label>
+                            <textarea id="photo-add-imgurl" rows="2" placeholder="https://images.unsplash.com/photo1,&#13;https://images.unsplash.com/photo2" class="w-full px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-sky-500 resize-none"></textarea>
                         </div>
                         <div class="grid grid-cols-2 gap-2">
                             <div>
@@ -169,6 +185,7 @@
                 </div>
             </aside>
 
+            <!-- Viewer Deck Grid -->
             <main class="flex-1 bg-slate-955 overflow-y-auto p-4 sm:p-6 md:p-8 flex justify-center items-start">
                 <div class="w-full max-w-5xl space-y-6">
                     
@@ -183,16 +200,31 @@
                         <div class="flex flex-wrap gap-1 w-full sm:w-auto" id="photo-category-filter-bar"></div>
                     </div>
 
+                    <!-- Envelopes Deck Grid -->
                     <div id="photo-deck-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-y-28 md:gap-y-16 gap-x-8 pt-8 pb-24"></div>
                 </div>
             </main>
         </div>
     </div>
 
-    <footer class="border-t border-slate-900 bg-slate-955 text-center py-4 text-xs text-slate-500 font-mono">
+    <!-- Image Lightbox Modal -->
+    <div id="image-lightbox" class="fixed inset-0 bg-black/90 z-[100] hidden flex items-center justify-center p-4" onclick="closeLightbox()">
+        <button class="absolute top-4 right-4 text-white/80 hover:text-white transition-colors p-2 bg-slate-900/80 rounded-full border border-slate-800">
+            <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+        <img id="lightbox-img" src="" alt="확대보기" class="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl" onclick="event.stopPropagation()">
+    </div>
+
+    <!-- ========================================== -->
+    <!-- GLOBAL FOOTER -->
+    <!-- ========================================== -->
+    <footer class="border-t border-slate-900 bg-slate-950 text-center py-4 text-xs text-slate-500 font-mono">
         &copy; 2026 Jinu's Space. Crafting Custom Identity.
     </footer>
 
+    <!-- ========================================== -->
+    <!-- PHOTOS JAVASCRIPT LOGIC -->
+    <!-- ========================================== -->
     <script>
         const initialPhotosData = [
             
@@ -201,7 +233,7 @@
         let photosData = [];
         let photoSelectedCategory = "ALL";
         let photoActiveSlideId = null;
-        let photoUploadedBase64Array = []; // 다중 이미지를 순서대로 보관하기 위한 배열로 변경
+        let photoUploadedBase64List = []; // 여러 파일을 담기 위한 배열
 
         document.addEventListener("DOMContentLoaded", () => {
             initializeDatabase();
@@ -221,25 +253,28 @@
 
         function setupPhotoVaultListeners() {
             const inputUpload = document.getElementById("photo-file-uploader");
-            inputUpload.addEventListener("change", (e) => {
-                const targetFiles = e.target.files;
-                if (targetFiles && targetFiles.length > 0) {
-                    photoUploadedBase64Array = []; // 기존 대기 배열 초기화
-                    let loadedCount = 0;
+            const fileCountIndicator = document.getElementById("file-count-indicator");
 
-                    Array.from(targetFiles).forEach((file) => {
+            inputUpload.addEventListener("change", (e) => {
+                const files = e.target.files;
+                photoUploadedBase64List = []; // 초기화
+
+                if (files && files.length > 0) {
+                    let loadedCount = 0;
+                    Array.from(files).forEach(file => {
                         const reader = new FileReader();
                         reader.onload = function(evt) {
-                            photoUploadedBase64Array.push(evt.target.result);
+                            photoUploadedBase64List.push(evt.target.result);
                             loadedCount++;
-                            
-                            // 선택한 파일이 모두 비동기적으로 Load 완료되었을 때 토스트 알림
-                            if (loadedCount === targetFiles.length) {
-                                triggerToast(`기기 내부 이미지 ${targetFiles.length}장이 버퍼 메모리에 등록되었습니다! 📸`);
+                            if (loadedCount === files.length) {
+                                fileCountIndicator.textContent = `${files.length}개의 파일 준비 완료 📸`;
+                                triggerToast(`${files.length}개의 이미지가 버퍼 메모리에 등록되었습니다! 📸`);
                             }
                         };
                         reader.readAsDataURL(file);
                     });
+                } else {
+                    fileCountIndicator.textContent = "선택된 파일 없음";
                 }
             });
 
@@ -290,27 +325,66 @@
             } else {
                 filtered.forEach((ph, idx) => {
                     const wrap = document.createElement("div");
-                    wrap.className = "perspective-container relative w-full h-[360px] flex items-end justify-center group mt-4";
-                    
                     const isOpened = photoActiveSlideId === ph.id;
+                    
+                    // 펼쳐진 상태일 때는 세로 크기 제약 없이 유연하게 늘어나도록 설정
+                    wrap.className = `perspective-container relative w-full flex items-end justify-center group mt-4 transition-all duration-500 ${
+                        isOpened ? 'h-[520px]' : 'h-[360px]'
+                    }`;
+                    
+                    // 등록된 이미지 배열 (이전 버전 호환성 고려)
+                    const imageList = ph.imgUrls || [ph.imgUrl];
+                    
+                    // 저장 시점에 고정해둔 랜덤 미리보기용 index 호출 (없으면 0번째)
+                    const previewIdx = ph.previewIndex !== undefined ? ph.previewIndex : 0;
+                    const previewImage = imageList[previewIdx] || imageList[0] || "https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&q=80&w=800";
+
+                    // 그룹화된 사진 썸네일 그리드 HTML 구성 (펼침 시 노출)
+                    let subImagesGridHtml = "";
+                    if (isOpened && imageList.length > 1) {
+                        subImagesGridHtml = `
+                            <div class="mt-2 pt-2 border-t border-slate-200">
+                                <p class="text-[8px] text-slate-400 font-bold mb-1 uppercase tracking-wider flex items-center gap-1">
+                                    <i data-lucide="images" class="w-3 h-3 text-sky-500"></i> 전체 사진 컬렉션 (${imageList.length}장)
+                                </p>
+                                <div class="grid grid-cols-4 gap-1 max-h-[110px] overflow-y-auto pr-0.5">
+                                    ${imageList.map((img, i) => `
+                                        <div class="relative aspect-square rounded-md overflow-hidden bg-slate-100 border border-slate-200/60 cursor-pointer group/item" onclick="openLightbox('${img.replace(/'/g, "\\'")}', event)">
+                                            <img src="${img}" class="w-full h-full object-cover transition-transform group-hover/item:scale-110" onerror="this.src='https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&q=80&w=800'">
+                                            <div class="absolute inset-0 bg-black/0 hover:bg-black/20 flex items-center justify-center transition-colors">
+                                                <i data-lucide="zoom-in" class="w-3 h-3 text-white opacity-0 hover:opacity-100 transition-opacity"></i>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    // 사진 수가 여러 개일 때 장수 태그
+                    const badgeHtml = imageList.length > 1 
+                        ? `<span class="absolute top-2 left-2 px-1.5 py-0.5 bg-sky-500 text-slate-950 font-bold text-[8px] rounded backdrop-blur-sm border border-sky-400/20 tracking-wider uppercase flex items-center gap-1 shadow-md z-10"><i data-lucide="layers" class="w-2.5 h-2.5"></i> +${imageList.length}</span>`
+                        : '';
 
                     wrap.innerHTML = `
-                        <div class="absolute bottom-0 w-full h-[220px] bg-slate-955 rounded-2xl shadow-inner z-0 border border-slate-800/60"></div>
+                        <div class="absolute bottom-0 w-full h-[220px] bg-slate-950 rounded-2xl shadow-inner z-0 border border-slate-800/60"></div>
 
                         <div id="polaroid-${ph.id}" 
                              onclick="togglePhotoSlideTrigger(${ph.id})"
-                             class="absolute w-[91%] max-w-full h-[300px] bg-white text-slate-900 rounded-xl shadow-lg p-3 flex flex-col justify-between transition-all duration-500 ease-out z-10 cursor-pointer ${
+                             class="absolute w-[91%] max-w-full bg-white text-slate-900 rounded-xl shadow-lg p-3 flex flex-col justify-between transition-all duration-500 ease-out z-10 cursor-pointer ${
                                  isOpened 
-                                 ? '-translate-y-[150px] scale-105 z-30 rotate-[2.5deg] shadow-2xl ring-4 ring-sky-400/40' 
-                                 : 'translate-y-4 group-hover:translate-y-[-12px] group-hover:rotate-[-1.5deg] rotate-0'
+                                 ? '-translate-y-[210px] scale-105 z-30 rotate-[2deg] shadow-2xl ring-4 ring-sky-400/40 h-[460px]' 
+                                 : 'translate-y-4 group-hover:translate-y-[-12px] group-hover:rotate-[-1.5deg] rotate-0 h-[300px]'
                              }">
                             
-                            <div class="w-full h-[62%] bg-slate-100 rounded-lg overflow-hidden relative shadow-inner">
-                                <img src="${ph.imgUrl}" alt="${ph.title}" class="w-full h-full object-cover select-none pointer-events-none" onerror="this.src='https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&q=80&w=800'">
+                            <!-- 메인 이미지 파트 -->
+                            <div class="w-full h-[58%] bg-slate-100 rounded-lg overflow-hidden relative shadow-inner">
+                                ${badgeHtml}
+                                <img src="${previewImage}" alt="${ph.title}" class="w-full h-full object-cover select-none pointer-events-none" onerror="this.src='https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&q=80&w=800'">
                                 <span class="absolute top-2 right-2 px-1.5 py-0.5 bg-slate-950/80 text-white font-mono text-[8px] rounded backdrop-blur-sm border border-white/10 tracking-widest uppercase">${ph.category}</span>
                             </div>
 
-                            <div class="h-[35%] flex flex-col justify-between pt-2">
+                            <div class="flex-1 flex flex-col justify-between pt-2 overflow-hidden">
                                 <div class="flex items-start justify-between gap-1">
                                     <h4 class="font-bold text-xs text-slate-900 truncate leading-tight">${ph.title}</h4>
                                     <span class="text-[8px] text-slate-400 font-mono flex-shrink-0">${ph.date}</span>
@@ -318,13 +392,18 @@
                                 
                                 <div class="relative flex-1 ${isOpened ? 'block' : 'hidden'} overflow-y-auto mt-1 pr-1 border-t border-slate-100 pt-1">
                                     <p class="handwritten-font text-[10px] text-slate-700 leading-relaxed font-semibold whitespace-pre-wrap">${ph.desc}</p>
+                                    
+                                    <!-- 여러 장일 때의 사진 묶음 노출 공간 -->
+                                    ${subImagesGridHtml}
                                 </div>
 
                                 <div class="flex items-center justify-between text-[8px] text-slate-450 mt-auto border-t border-slate-100/50 pt-1 ${isOpened ? 'hidden' : 'flex'}">
                                     <span class="flex items-center gap-1">
                                         <i data-lucide="map-pin" class="w-2.5 h-2.5 text-sky-500"></i> ${ph.location}
                                     </span>
-                                    <span class="text-[7.5px] tracking-wider font-mono text-sky-600 font-extrabold uppercase">CLICK TO OPEN</span>
+                                    <span class="text-[7.5px] tracking-wider font-mono text-sky-600 font-extrabold uppercase flex items-center gap-0.5">
+                                        ${imageList.length > 1 ? '<i data-lucide="folder" class="w-2.5 h-2.5"></i> ALBUM OPEN' : 'CLICK TO OPEN'}
+                                    </span>
                                 </div>
 
                                 <div class="items-center justify-between text-[8px] text-slate-450 mt-auto border-t border-slate-100 pt-1 ${isOpened ? 'flex' : 'hidden'}">
@@ -338,10 +417,10 @@
                             </div>
                         </div>
 
-                        <div class="absolute bottom-0 w-full h-[180px] bg-gradient-to-b from-slate-900 via-slate-955 to-black rounded-b-2xl rounded-t-md shadow-2xl z-20 border-t border-slate-800/80 flex flex-col justify-between p-4 cursor-pointer select-none overflow-hidden"
+                        <div class="absolute bottom-0 w-full h-[180px] bg-gradient-to-b from-slate-900 via-slate-950 to-black rounded-b-2xl rounded-t-md shadow-2xl z-20 border-t border-slate-800/80 flex flex-col justify-between p-4 cursor-pointer select-none overflow-hidden"
                              onclick="togglePhotoSlideTrigger(${ph.id})">
                             
-                            <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-7 bg-slate-955 rounded-b-full border-b border-slate-800/40 z-30"></div>
+                            <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-7 bg-slate-950 rounded-b-full border-b border-slate-800/40 z-30"></div>
                             
                             <div class="space-y-1 relative z-10 pt-2">
                                 <span class="text-[8px] font-mono tracking-widest text-sky-400/80 font-bold">SLOT 0${idx + 1}</span>
@@ -364,11 +443,16 @@
             renderPhotoFilterBarUI();
 
             photosData.forEach(ph => {
+                const imageList = ph.imgUrls || [ph.imgUrl];
+                const previewIdx = ph.previewIndex !== undefined ? ph.previewIndex : 0;
+                const previewImg = imageList[previewIdx] || imageList[0] || "https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&q=80&w=800";
+                
                 const subCard = document.createElement("div");
-                subCard.className = "flex items-center gap-3 bg-slate-955 p-2 rounded-xl border border-slate-850/80 hover:border-slate-800 transition-colors";
+                subCard.className = "flex items-center gap-3 bg-slate-950 p-2 rounded-xl border border-slate-850/80 hover:border-slate-800 transition-colors";
                 subCard.innerHTML = `
-                    <div class="w-10 h-10 rounded-lg bg-slate-900 overflow-hidden flex-shrink-0 border border-slate-800">
-                        <img src="${ph.imgUrl}" alt="" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&q=80&w=800'">
+                    <div class="w-10 h-10 rounded-lg bg-slate-900 overflow-hidden flex-shrink-0 border border-slate-800 relative">
+                        <img src="${previewImg}" alt="" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&q=80&w=800'">
+                        ${imageList.length > 1 ? `<span class="absolute bottom-0 right-0 bg-sky-500 text-slate-950 font-extrabold text-[7px] px-0.5 rounded-tl">${imageList.length}</span>` : ''}
                     </div>
                     <div class="flex-1 min-w-0">
                         <h5 class="text-[11px] font-bold text-white truncate">${ph.title}</h5>
@@ -416,13 +500,28 @@
             renderPhotoArchive();
         }
 
+        function openLightbox(url, event) {
+            if (event) {
+                event.stopPropagation(); // 폴라로이드 닫힘 현상 방지
+            }
+            const lightbox = document.getElementById("image-lightbox");
+            const lightboxImg = document.getElementById("lightbox-img");
+            lightboxImg.src = url;
+            lightbox.classList.remove("hidden");
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById("image-lightbox");
+            lightbox.classList.add("hidden");
+        }
+
         function addNewPhotoCard() {
             const titleInput = document.getElementById("photo-add-title");
             const locationInput = document.getElementById("photo-add-location");
             const dateInput = document.getElementById("photo-add-date");
             const catSelect = document.getElementById("photo-add-category");
             const descInput = document.getElementById("photo-add-desc");
-            const directUrl = document.getElementById("photo-add-imgurl");
+            const directUrlTextarea = document.getElementById("photo-add-imgurl");
 
             const title = titleInput.value.trim();
             const location = locationInput.value.trim();
@@ -430,54 +529,59 @@
             const category = catSelect.value;
             const desc = descInput.value.trim();
 
+            // 등록 이미지 수집 배열
+            let finalImages = [];
+
+            // 1. 업로드된 로컬 다중 파일들 주입
+            if (photoUploadedBase64List && photoUploadedBase64List.length > 0) {
+                finalImages = [...photoUploadedBase64List];
+            } 
+            
+            // 2. 수동 URL 텍스트 분석 주입 (쉼표 혹은 줄바꿈으로 파싱)
+            if (directUrlTextarea.value.trim() !== "") {
+                const urls = directUrlTextarea.value.split(/[\n,]+/).map(url => url.trim()).filter(url => url !== "");
+                finalImages = [...finalImages, ...urls];
+            }
+
+            // 만약 아무 이미지도 등록되지 않았을 경우 디폴트 이미지
+            if (finalImages.length === 0) {
+                finalImages.push("https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&q=80&w=800");
+            }
+
             if (!title) {
                 triggerToast("에세이 카드 추가를 하려면 '제목' 정보가 있어야 합니다.", "error");
                 return;
             }
 
-            // 업로드 방식을 결정할 이미지 임시 배열 확보
-            let finalImages = [];
+            // 대표 이미지로 활용할 인덱스를 0부터 사진수-1 범위 내에서 '랜덤'으로 하나 선정
+            const randomPreviewIndex = Math.floor(Math.random() * finalImages.length);
 
-            if (photoUploadedBase64Array.length > 0) {
-                finalImages = [...photoUploadedBase64Array];
-            } else if (directUrl.value.trim() !== "") {
-                finalImages.push(directUrl.value.trim());
-            } else {
-                // 아무것도 등록하지 않았을 때 기본 fallback 이미지 사용
-                finalImages.push("https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&q=80&w=800");
-            }
-
-            // 여러 이미지에 대해 순차적으로 데이터 생성 및 localstorage 주입
-            finalImages.forEach((imgSrc, index) => {
-                const nextId = photosData.length > 0 ? Math.max(...photosData.map(p => p.id)) + 1 : 1;
-                
-                // 이미지가 한 장일 땐 원본 제목을, 여러 장일 때는 순번 명시
-                const cardTitle = finalImages.length > 1 ? `${title} - ${index + 1}` : title;
-
-                photosData.push({
-                    id: nextId,
-                    title: cardTitle,
-                    date: date || new Date().toISOString().split('T')[0].replace(/-/g, '.'),
-                    location: location || "기억속 보금자리",
-                    category: category,
-                    desc: desc || "한 장의 소중한 순간 속에 차곡히 머금어 둔 아름다운 독백입니다.",
-                    imgUrl: imgSrc
-                });
+            const nextId = photosData.length > 0 ? Math.max(...photosData.map(p => p.id)) + 1 : 1;
+            photosData.push({
+                id: nextId,
+                title: title,
+                date: date || new Date().toISOString().split('T')[0].replace(/-/g, '.'),
+                location: location || "기억속 보금자리",
+                category: category,
+                desc: desc || "한 장의 소중한 순간 속에 차곡히 머금어 둔 아름다운 독백입니다.",
+                imgUrls: finalImages, // 다중 이미지 배열 저장
+                previewIndex: randomPreviewIndex // 렌더링 시 사용할 랜덤 대표 인덱스 고정
             });
 
             localStorage.setItem('tactile_photo_vault_db', JSON.stringify(photosData));
             
-            // 인풋 폼 초기화
+            // 입력 폼 클리어
             titleInput.value = "";
             locationInput.value = "";
             dateInput.value = "";
             descInput.value = "";
-            directUrl.value = "";
-            photoUploadedBase64Array = [];
+            directUrlTextarea.value = "";
+            photoUploadedBase64List = [];
             document.getElementById("photo-file-uploader").value = "";
+            document.getElementById("file-count-indicator").textContent = "선택된 파일 없음";
 
             renderPhotoArchive();
-            triggerToast(`📸 새로운 메모리 카드 ${finalImages.length}장이 아카이브 슬롯에 이식되었습니다!`);
+            triggerToast(`📸 ${finalImages.length}개의 메모리 카드가 하나의 묶음 아카이브 슬롯에 이식되었습니다!`);
         }
 
         function removePhotoCard(id) {
@@ -498,6 +602,14 @@
                 output += `* **촬영 날짜:** ${ph.date}\n`;
                 output += `* **기록 장소:** ${ph.location}\n`;
                 output += `* **카테고리:** ${ph.category}\n\n`;
+                
+                const list = ph.imgUrls || [ph.imgUrl];
+                output += `* **수록 사진 목록 (총 ${list.length}장):**\n`;
+                list.forEach((img, i) => {
+                    output += `  - 사진 ${i+1}: ${img}\n`;
+                });
+                output += `\n`;
+
                 output += `### 📝 일기 에세이 수록글\n`;
                 output += `> ${ph.desc}\n\n`;
                 output += `---\n\n`;
@@ -520,7 +632,7 @@
             const toast = document.createElement("div");
             toast.className = `flex items-center gap-2.5 px-3.5 py-3 rounded-xl shadow-2xl border text-xs font-semibold transition-all transform translate-y-2 opacity-0 pointer-events-auto max-w-sm ${
                 type === 'error' 
-                ? 'bg-rose-955 text-rose-200 border-rose-900/60' 
+                ? 'bg-rose-950 text-rose-200 border-rose-900/60' 
                 : 'bg-slate-900 text-sky-450 border-slate-800'
             }`;
             
